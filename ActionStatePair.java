@@ -1,14 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package chinesechecker;
 
-/**
- *
- * @author nonit
- */
 public class ActionStatePair {
 
     /**
@@ -18,7 +10,7 @@ public class ActionStatePair {
     /**
      * The state after the action is applied to the current state.
      */
-    public State state;
+    public CCState state;
 
     /**
      * Creates an action-state object.
@@ -26,7 +18,7 @@ public class ActionStatePair {
      * @param action The action component of the pair.
      * @param state The state component of the pair.
      */
-    public ActionStatePair(Action action, State state) {
+    public ActionStatePair(Action action, CCState state) {
         this.action = action;
         this.state = state;
     } //end method

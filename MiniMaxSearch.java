@@ -5,6 +5,7 @@
  */
 package chinesechecker;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,17 +28,19 @@ public abstract class MiniMaxSearch {
      * @return Return an ActionScorePair. The action attribute is the action to
      * take. The score attribute is the utility value.
      */
-    
-    public ActionScorePair search (State state, MiniMaxPlayerRole role) {
-        
+    public ActionScorePair search(State state, PlayerRole role) {
+        int k = 2;
         this.nodeVisited = 0;			//reset node count to 0
 
-        if (role == MiniMaxPlayerRole.MAX) //base on the role, call the appropriate method
+        System.out.println("ROLE: " + role);
+        
+        if (role == PlayerRole.MAX) //base on the role, call the appropriate method
         {
-            return maxValue(state);
+            System.out.println("IN MAX IF");
+            return maxValue(k, state);
         }
-        if (role == MiniMaxPlayerRole.MIN) {
-            return minValue(state);
+        if (role == PlayerRole.MIN) {
+            return minValue(k, state);
         }
         return null;
     } //end method
@@ -49,32 +52,57 @@ public abstract class MiniMaxSearch {
      * @return An ActionScorePair. The action attribute contains the action to
      * take.
      */
-    
-    protected ActionScorePair maxValue(State state) {
+    protected ActionScorePair maxValue(int k, State state) {
         
-        this.nodeVisited++;		//increment node count by 1
-        
-        if (this.isTerminal(state))     //if current state is a terminal state
+        this.nodeVisited++;														//increment node count by 1
+        if (this.isTerminal(state)) //if current state is a terminal state
         {
-            return new ActionScorePair(null, this.utility(state, MiniMaxPlayerRole.MIN)); //return the utility score in an ActionScorePair. But there is no action to take.
+            return new ActionScorePair(null, this.utility(state, PlayerRole.MAX));				//return the utility score in an ActionScorePair. But there is no action to take.
         }
-        
-        double score = Double.NEGATIVE_INFINITY;	//otherwise need to search children. Set score to -infinity so that any score will be bigger.
-        Action action = null;				//initially no action to take
+        double score = Double.NEGATIVE_INFINITY;									//otherwise need to search children. Set score to -infinity so that any score will be bigger.
+        Action action = null;														//initially no action to take
 
-        List <ActionStatePair> childrenList = state.successor( MiniMaxPlayerRole.MAX ); //generate all successors of a MAX level
-        Object[] childrenArray = childrenList.toArray();					//convert list of ActionStatePair to an array for easier manipulation
-        for (int i = 0; i < childrenArray.length; i++) //loop through all children
-        {
-            ActionStatePair actionStatePair = (ActionStatePair) childrenArray[i];	//get a child
-            State child = (State) actionStatePair.state;							//cast it to a cm3038.search.adversarial.State object
-            double childScore = minValue(child).score;							//recursively find min score from this child state
-            if (childScore > score) //if score of child is bigger than current score
+        if (k > 0) {
+            List<ActionStatePair> childrenList = state.successor(PlayerRole.MAX);		//generate all successors of a MAX level
+            Object[] childrenArray = childrenList.toArray();
+//            System.out.println("Children: " + childrenList.toString());
+            //convert list of ActionStatePair to an array for easier manipulation
+
+            for (int i = 0; i < childrenArray.length; i++) //loop through all children
             {
-                score = childScore;												//replace current best score with child score
-                action = actionStatePair.action;									//remember action to take to reach this child
+                ActionStatePair actionStatePair = (ActionStatePair) childrenArray[i];	//get a child
+                State child = (State) actionStatePair.state;
+
+                double childScore = minValue(k, child).score;
+
+                if (score < childScore) //this child has a higher score. Good!
+                {
+                    score = childScore;												//update score to higher children score
+                    action = actionStatePair.action;									//update action to higher score action
+                }
+                //otherwise, update alpha and continue with other children
+            }
+        } else {
+            List<ActionStatePair> childrenList = state.successor(PlayerRole.MAX);		//generate all successors of a MAX level
+            Object[] childrenArray = childrenList.toArray();							//convert list of ActionStatePair to an array for easier manipulation
+//            System.out.println("Children: " + childrenList.toString());
+
+            for (int i = 0; i < childrenArray.length; i++) //loop through all children
+            {
+                ActionStatePair actionStatePair = (ActionStatePair) childrenArray[i];	//get a child
+                State child = (State) actionStatePair.state;
+
+                double childScore = utility(child, PlayerRole.MIN);
+
+                if (score < childScore) //this child has a higher score. Good!
+                {
+                    score = childScore;												//update score to higher children score
+                    action = actionStatePair.action;									//update action to higher score action
+                }
+
             }
         }
+        k--;
         return new ActionScorePair(action, score);								//return ActionScorePair with the max action and score
     } //end method
 
@@ -85,26 +113,46 @@ public abstract class MiniMaxSearch {
      * @return An ActionScorePair. The action attribute contains the action to
      * take.
      */
-    protected ActionScorePair minValue(State state) {
+    protected ActionScorePair minValue(int k, State state) {
         this.nodeVisited++;														//increment node count by 1
         if (this.isTerminal(state)) //check for terminal state
         {
-            return new ActionScorePair(null, this.utility(state, MiniMaxPlayerRole.MAX));				//if it is a terminal, return score, no action needed
+            return new ActionScorePair(null, this.utility(state, PlayerRole.MIN));				//if it is a terminal, return score, no action needed
         }
         double score = Double.POSITIVE_INFINITY;									//otherwise prepare to search
         Action action = null;
-        List<ActionStatePair> childrenList = state.successor(MiniMaxPlayerRole.MIN);		//find all successors of a MIN level
-        Object[] childrenArray = childrenList.toArray();
-        for (int i = 0; i < childrenArray.length; i++) {
-            ActionStatePair actionStatePair = (ActionStatePair) childrenArray[i];
-            State child = (State) actionStatePair.state;
-            double childScore = maxValue(child).score;							//recursively find max score from this child state
-            if (childScore < score) //if child score is smaller
-            {
-                score = childScore;												//remember this child score
-                action = actionStatePair.action;									//remember this action
+
+        if (k > 0) {
+            List<ActionStatePair> childrenList = state.successor(PlayerRole.MIN);		//find all successors of a MIN level
+            Object[] childrenArray = childrenList.toArray();
+
+            for (int i = 0; i < childrenArray.length; i++) {
+                ActionStatePair actionStatePair = (ActionStatePair) childrenArray[i];
+                State child = (State) actionStatePair.state;
+                double childScore = maxValue(k, child).score;							//recursively find max score from this child state
+                if (score > childScore) //child has a lower score. good!
+                {
+                    score = childScore;
+                    action = actionStatePair.action;
+                }
             }
+        } else {
+            List<ActionStatePair> childrenList = state.successor(PlayerRole.MIN);		//find all successors of a MIN level
+            Object[] childrenArray = childrenList.toArray();
+            for (int i = 0; i < childrenArray.length; i++) {
+                ActionStatePair actionStatePair = (ActionStatePair) childrenArray[i];
+                State child = (State) actionStatePair.state;
+                double childScore = utility(child, PlayerRole.MAX);							//recursively find max score from this child state
+                if (score > childScore) //child has a lower score. good!
+                {
+                    score = childScore;
+                    action = actionStatePair.action;
+                }
+                //otherwise update beta, continue with remaining children
+            }
+
         }
+        k--;
         return new ActionScorePair(action, score);								//return action and score
     } //end method
 
@@ -118,12 +166,13 @@ public abstract class MiniMaxSearch {
     public abstract boolean isTerminal(State state);
 
     /**
-     * Find the utility score of a state. This method is domain-dependent and
+     * Find the utility score of a state.This method is domain-dependent and
      * must be implemented by a class that extends the MiniMaxSearch abstract
      * class.
      *
      * @param state The state.
+     * @param role The player role
      * @return The utility score.
      */
-    public abstract double utility(State state, MiniMaxPlayerRole role);
+    public abstract double utility(State state, PlayerRole role);
 } //end class

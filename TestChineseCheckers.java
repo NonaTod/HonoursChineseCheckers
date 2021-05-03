@@ -7,6 +7,7 @@ package chinesechecker;
 
 import chinesechecker.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -16,20 +17,65 @@ public class TestChineseCheckers {
 
     public static void main(String[] arg) throws CloneNotSupportedException {
 
-        CCState gameState = new CCState();	//create initial state of empty board
-        MiniMaxSearch cc = new CCProblem();	//create minimax problem instance
-        //CCAlphaBetaProblem cc=new CCAlphaBetaProblem();
-        
+        CCState gameState = new CCState();
+
+        //MINIMAX 
+//        CCProblem cc = new CCProblem();	
+        CCAlphaBetaProblem cc = new CCAlphaBetaProblem();
+
+        //MONTE CARLO 
+        MCProblem agent = new PudgeAgent();
+
+        //DEPTH FIRST ITERATIVE DEEPENING A*
+        DFSearch dfs;
+
+        int moves = 0;
+        int nodes = 0;
+        int maxNodes = Integer.MIN_VALUE;
+        int minNodes = Integer.MAX_VALUE;
+
         Player currPlayer = gameState.currPlayer;
         ArrayList<Player> turnOrder = gameState.turnOrder;
+        System.out.println("\n\n~~~~~~~~~~ BEGINNING OF THE CHINESE CHECKERS GAME ~~~~~~~~~~\n\n");
 
-        while (!cc.isTerminal(gameState)) {
-            System.out.println("Curr player:" + currPlayer.getName());
-            Action action = currPlayer.getAction(cc, gameState);
-            System.out.println("Action: " + action.toString());
-            gameState = gameState.applyAction((CCAction) action);
+        while (!cc.isTerminalLong(gameState)) {
+            System.out.println("\n\n\n\n");
+            Action action = new CCAction();
+
+         
+            if (currPlayer.role == PlayerRole.MAX || currPlayer.role == PlayerRole.MIN) {
+                action = currPlayer.getAction(cc, gameState);
+                System.out.println("Current MAX action: " + action.toString());
+                gameState = gameState.applyAction((CCAction) action);
+
+            } else if (currPlayer.role == PlayerRole.MC) {
+                System.out.println("Current player MC");
+                action = agent.nextMove(gameState);
+                System.out.println("Current MC action: " + action.toString());
+                gameState = gameState.applyAction(action);
+                
+            } else if (currPlayer.role == PlayerRole.DF) {
+                dfs = new DFProblem(gameState);
+                System.out.println("Current player DF");
+                DFNode node = dfs.search();
+                action = node.action;
+                System.out.println("Current DF action: " + action.toString());
+                gameState = gameState.applyAction((CCAction) action);
+            }
+
+            System.out.println("Game state after action:" + gameState.toStringByIcons());
+
+            if (action.nodes > maxNodes) {
+                maxNodes = action.nodes;
+            }
+
+            if (action.nodes < minNodes) {
+                minNodes = action.nodes;
+            }
+            nodes += action.nodes;
+
+
             int currIndex = 0;
-
             for (int i = 0; i < turnOrder.size(); i++) {
                 if (turnOrder.get(i) == currPlayer) {
                     currIndex = i;
@@ -39,34 +85,28 @@ public class TestChineseCheckers {
 
             // if the number of players exceeds 3 then the way
             // or is determined changes 
-            System.out.println("In that loop");
             if (currIndex < (turnOrder.size() - 1)) {
                 currPlayer = turnOrder.get(currIndex + 1);
             } else {
                 currPlayer = turnOrder.get(0);
             }
+            
+            System.out.println("Move: " + moves++);
+            System.out.println("Total moves: " + moves);
+            System.out.println("Min nodes: " + minNodes);
+            System.out.println("Max nodes: " + maxNodes);
+            System.out.println("Total nodes: " + nodes);
+            System.out.println("Average nodes checked: " + nodes / moves);
+
         } //end while
 
-        String greenArray = "";
-        String redArray = "";
-        for (int x = 0; x < gameState.gb.length; x++) {
-            for (int y = 0; y < gameState.gb[0].length; y++) {
-                if (gameState.gb[x][y] != null) {
-
-                    if (gameState.gb[x][y].getColour() == Colour.GREEN) {
-                        greenArray += "x: " + x + ", y: " + y + "\n";
-                    }
-                    if (gameState.gb[x][y].getColour() == Colour.RED) {
-                        redArray += "x: " + x + ", y: " + y + "\n";
-                    }
-
-                }
-            }
-        }
-        System.out.println("Green array: \n" + greenArray);
-        System.out.println("Red array: \n" + redArray);
-
+        System.out.println( "GAME STATE AFTER END by colours" + gameState.toString());
         System.out.println("Game Ended!");
+        System.out.println("Total moves: " + moves);
+        System.out.println("Min nodes: " + minNodes);
+        System.out.println("Max nodes: " + maxNodes);
+        System.out.println("Total nodes: " + nodes);
+        System.out.println("Average nodes checked: " + nodes / moves);
     } //end method
 } //end class
 

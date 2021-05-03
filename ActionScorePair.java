@@ -15,7 +15,7 @@ public class ActionScorePair
 /**
  * The action.
  */
-public Action action;
+public Action action; 
 
 /**
  * The score of the state that the action is leading to.
@@ -32,4 +32,11 @@ public ActionScorePair(Action action,double score)
 this.action=action;
 this.score=score;
 } //end method
+
+    @Override
+    public String toString() {
+        return "ActionScorePair{" + "action=" + action.toString() + ", score=" + score + '}';
+    }
+
+
 } //end class

@@ -9,6 +9,17 @@ package chinesechecker;
  *
  * @author nonit
  */
-public class MCPlayer {
-    
+public class MCPlayer extends Player {
+
+    PlayerRole role;
+
+    public MCPlayer(String name, Colour colour, PlayerRole role) {
+        super(name, colour, role);
+    }
+
+    @Override
+    public Action getAction(MiniMaxSearch problem, State state) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

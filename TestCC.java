@@ -20,6 +20,6 @@ CCState initialState = new CCState();					//create initial state of empty board
 
 CCAlphaBetaProblem cc=new CCAlphaBetaProblem();	//create minimax problem instance
 
-System.out.println(cc.utility(initialState,MiniMaxPlayerRole.MIN));
+System.out.println(cc.utility(initialState,PlayerRole.MIN));
 } //end method
 } //end class   

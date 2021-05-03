@@ -13,16 +13,23 @@ import java.util.List;
  */
 public class TestSuccessor {
 
-public static void main(String[] arg)
+public static void main(String[] arg) throws CloneNotSupportedException
 {
 
-CCState state=new CCState();
-//System.out.println(state.toString());
+CCState gameState = new CCState();
+   
 
-List<ActionStatePair> children = state.successor(MiniMaxPlayerRole.MAX);
+Action action = new CCAction(11,3,10,4);
+    
+gameState = gameState.applyAction((CCAction) action);
+ System.out.println("INITIAL STATE:" + gameState.toString());
+ 
+List<ActionStatePair> children = gameState.successor(PlayerRole.MIN);
 
-System.out.print("\nChildren:\n");
+
+System.out.print("\nChildren:" + children.size() + "\n");
 System.out.println(children);
+
 
 } //end method
 } //end class   

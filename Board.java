@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package chinesechecker;
 
 import java.awt.Color;
@@ -22,12 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
-/**
- *
- * @author nonit
- */
-//////////////////////////////////////////////////////////////////////////
-// Board class
+
 public class Board extends JPanel {
 
     private int BOARD_SIZE = 620;
@@ -71,10 +61,10 @@ public class Board extends JPanel {
 
             // 2 Players
             case 0:
-                Player maxPlayer = new MiniMaxPlayer("Max player", Colour.GREEN, MiniMaxPlayerRole.MAX);
+                Player maxPlayer = new MiniMaxPlayer("Max player", Colour.GREEN, PlayerRole.MAX);
                 System.out.println("Player Colour after creation (MAX): " + maxPlayer.getName() + " " + maxPlayer.getColour());
 
-                Player minPlayer = new MiniMaxPlayer("Min player", Colour.RED, MiniMaxPlayerRole.MIN);
+                Player minPlayer = new MiniMaxPlayer("Min player", Colour.RED, PlayerRole.MIN);
                 System.out.println("Player Colour after creation (MIN): " + minPlayer.getName() + " " + minPlayer.getColour());
 
                 state.currPlayer = maxPlayer;
@@ -87,10 +77,10 @@ public class Board extends JPanel {
                 break;
 
             case 1:
-                Player maxPlayer1 = new MiniMaxPlayer("Max player", Colour.WHITE, MiniMaxPlayerRole.MAX);
+                Player maxPlayer1 = new MiniMaxPlayer("Max player", Colour.WHITE, PlayerRole.MAX);
                 System.out.println("Player1 Colour after creation (MAX): " + maxPlayer1.getName() + " " + maxPlayer1.getColour());
 
-                Player minPlayer1 = new MiniMaxPlayer("Min player", Colour.YELLOW, MiniMaxPlayerRole.MIN);
+                Player minPlayer1 = new MiniMaxPlayer("Min player", Colour.YELLOW, PlayerRole.MIN);
                 System.out.println("Player2 Colour after creation (MIN): " + minPlayer1.getName() + " " + minPlayer1.getColour());
 
                 state.currPlayer = maxPlayer1;
@@ -102,8 +92,8 @@ public class Board extends JPanel {
                 break;
 
             case 2:
-                Player maxPlayer2 = new MiniMaxPlayer("Max player", Colour.BLUE, MiniMaxPlayerRole.MAX);
-                Player minPlayer2 = new MiniMaxPlayer("Min player", Colour.BLACK, MiniMaxPlayerRole.MIN);
+                Player maxPlayer2 = new MiniMaxPlayer("Max player", Colour.BLUE, PlayerRole.MAX);
+                Player minPlayer2 = new MiniMaxPlayer("Min player", Colour.BLACK, PlayerRole.MIN);
                 state.currPlayer = maxPlayer2;
 
                 state.turnOrder.add(maxPlayer2);
@@ -911,16 +901,16 @@ public class Board extends JPanel {
                 if (state.isHighlight(label)) {
                     if (label.getIcon() == state.h_grn) {
                         end.piece.setIcon(state.d_grn);
-                    } else if (label.getIcon() == state.h_wht) {
-                        end.piece.setIcon(state.d_wht);
-                    } else if (label.getIcon() == state.h_yel) {
-                        end.piece.setIcon(state.d_yel);
-                    } else if (label.getIcon() == state.h_blu) {
-                        end.piece.setIcon(state.d_blu);
+//                    } else if (label.getIcon() == state.h_wht) {
+//                        end.piece.setIcon(state.d_wht);
+//                    } else if (label.getIcon() == state.h_yel) {
+//                        end.piece.setIcon(state.d_yel);
+//                    } else if (label.getIcon() == state.h_blu) {
+//                        end.piece.setIcon(state.d_blu);
                     } else if (label.getIcon() == state.h_red) {
                         end.piece.setIcon(state.d_red);
-                    } else if (label.getIcon() == state.h_blk) {
-                        end.piece.setIcon(state.d_blk);
+//                    } else if (label.getIcon() == state.h_blk) {
+//                        end.piece.setIcon(state.d_blk);
                     }
                 }
             }
@@ -934,16 +924,16 @@ public class Board extends JPanel {
                 if (state.isDot(end)) {
                     if (label.getIcon() == state.d_grn) {
                         end.piece.setIcon(state.h_grn);
-                    } else if (label.getIcon() == state.d_wht) {
-                        end.piece.setIcon(state.h_wht);
-                    } else if (label.getIcon() == state.d_yel) {
-                        end.piece.setIcon(state.h_yel);
-                    } else if (label.getIcon() == state.d_blu) {
-                        end.piece.setIcon(state.h_blu);
+//                    } else if (label.getIcon() == state.d_wht) {
+//                        end.piece.setIcon(state.h_wht);
+//                    } else if (label.getIcon() == state.d_yel) {
+//                        end.piece.setIcon(state.h_yel);
+//                    } else if (label.getIcon() == state.d_blu) {
+//                        end.piece.setIcon(state.h_blu);
                     } else if (label.getIcon() == state.d_red) {
                         end.piece.setIcon(state.h_red);
-                    } else if (label.getIcon() == state.d_blk) {
-                        end.piece.setIcon(state.h_blk);
+//                    } else if (label.getIcon() == state.d_blk) {
+//                        end.piece.setIcon(state.h_blk);
                     }
                 }
             }

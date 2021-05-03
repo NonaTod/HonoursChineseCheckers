@@ -15,6 +15,7 @@ public class CCAction extends Action {
     public int currentY;
     public int nextX;
     public int nextY;
+    public int nodes;
     
     public CCAction(int currentX, int currentY, int nextX, int nextY)
     {
@@ -22,6 +23,16 @@ public class CCAction extends Action {
         this.currentY = currentY;
         this.nextX = nextX;
         this.nextY = nextY;
+        this.nodes = 0;
+    }
+    
+    public CCAction()
+    {
+        this.currentX = -1;
+        this.currentY = -1;
+        this.nextX = -1;
+        this.nextY = -1;
+        this.nodes = -1;
     }
     
     public String toString()

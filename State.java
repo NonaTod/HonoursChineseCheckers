@@ -50,5 +50,5 @@ public int hashCode();
  * If use a {@link java.util.Set}, the order is not kept/guaranteed.
  * @return All possible action-state pairs as a {@link java.util.List} of {@link ActionStatePair} objects.
  */
-public List<ActionStatePair> successor(MiniMaxPlayerRole role);
+public List<ActionStatePair> successor(PlayerRole role);
 }

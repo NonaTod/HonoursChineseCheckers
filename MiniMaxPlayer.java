@@ -13,31 +13,26 @@ import javax.swing.ImageIcon;
  */
 public class MiniMaxPlayer extends Player {
 
-    MiniMaxPlayerRole role;
 
-    public MiniMaxPlayer(String name, Colour colour, MiniMaxPlayerRole role) {
-        super(name, colour);
-        this.role = role;
+    public MiniMaxPlayer(String name, Colour colour, PlayerRole role) {
+        super(name, colour, role);
     }
 
-    public MiniMaxPlayerRole getRole() {
-        return role;
-    }
-
-    public void setRole(MiniMaxPlayerRole role) {
-        this.role = role;
-    }
-
+    
+    @Override
     public Action getAction(MiniMaxSearch problem, State state) {
         System.out.println(this.name + "'s turn.");
-        ActionScorePair result = problem.search(state, this.role);		//find a move for the current state and role
-        if (result == null) //this should not happen. Just for safety.
+        
+        ActionScorePair result = problem.search(state, this.role);
+//        ActionScorePair result = problem.search(state, PlayerRole.MAX);
+        if (result == null) 
         {
             return null;
         }
-        System.out.println("Node visited: " + problem.nodeVisited);	//print some statistics in making this move
+        result.action.nodes = problem.nodeVisited;
+        System.out.println("Node visited: " + problem.nodeVisited);	
         System.out.println("Action score: " + result.score);
-        return result.action;										//return the action decided
+        return result.action;										
     } //end method
     
 } //end class

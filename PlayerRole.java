@@ -5,10 +5,9 @@
  */
 package chinesechecker;
 
-/**
- *
- * @author nonit
- */
-public enum MiniMaxPlayerRole {
-    MAX, MIN, UNKNOWN;
-} //end enumeration
+
+public enum PlayerRole {
+    MAX, MIN, MC, DF,  UNKNOWN;
+} 
+
+
